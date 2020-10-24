@@ -1,14 +1,15 @@
-a = pascal(10);
-b = rand(10,1);
+size =10;
+a = pascal(size);
+b = rand(size,1);
 x_real = b'/a;
-x0  =rand(10,1);
+x0  =rand(size,1);
 [x_num,x0_out,i,r] = conjgrad(a,b,x0);
 
 function [x0, x0_out,i,r_out] = conjgrad(A, b, x0)
     r = b - A * x0;
     p = r;
     rsold = r' * r;
-    for i = 1:length(b)
+    for i = 1:1000 %length(b)
         Ap = A * p;
         alpha = rsold / (p' * Ap);
         x0 = x0 + alpha * p;
@@ -16,7 +17,7 @@ function [x0, x0_out,i,r_out] = conjgrad(A, b, x0)
         rsnew = r' * r;
         x0_out(i,:) = x0;
         r_out(i) = rsnew;
-        if sqrt(rsnew) < 1e-10
+        if sqrt(rsnew) < 1e-100
               break
         end
         p = r + (rsnew / rsold) * p;
