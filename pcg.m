@@ -1,7 +1,7 @@
 clc;
 clear;
 close all;
-size =1000;
+size =100;
 
 %a = pascal(size);
 
@@ -10,12 +10,18 @@ a=a'*a;
 B=0.01*eye(size);
 C=a+B;
 
+L = randn(size);
+L=L'*L;
+L = L+B;
+
 b = rand(size,1);
 x_real = b'/C;
 x0  =rand(size,1);
-%[x_num,x0_out,i,r] = conjgrad(C,b,x0);
+[x_num,x0_out,i,r] = conjgrad(C,b,x0);
+semilogy(r,'o');
+hold on;
 D = ichol(C);
-[x_num,x0_out,i,r] = preconditioned_conjgrad(C,b,x0,C);
+[x_num,x0_out,i,r] = preconditioned_conjgrad(C,b,x0,L);
 
 semilogy(r);
 D= ichol(C);
@@ -83,8 +89,8 @@ function [x0, x0_out,i,r_out] = preconditioned_conjgrad(A, b, x0,M)
         z = Minv * r;
         rzsnew = r' * z;
         x0_out(i,:) = x0;
-        r_out(i) = rzsnew;
-        if sqrt(rzsnew) < 1e-100
+        r_out(i) = r'*r;
+        if sqrt(r'*r) < 1e-20
               break
         end
         p = z + (rzsnew / rzsold) * p;
