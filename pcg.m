@@ -1,9 +1,13 @@
+clc;
+clear;
+close all;
 size =10;
 a = pascal(size);
 b = rand(size,1);
 x_real = b'/a;
 x0  =rand(size,1);
 [x_num,x0_out,i,r] = conjgrad(a,b,x0);
+semilogy(r);
 
 function [x0, x0_out,i,r_out] = conjgrad(A, b, x0)
     r = b - A * x0;
@@ -17,7 +21,7 @@ function [x0, x0_out,i,r_out] = conjgrad(A, b, x0)
         rsnew = r' * r;
         x0_out(i,:) = x0;
         r_out(i) = rsnew;
-        if sqrt(rsnew) < 1e-100
+        if sqrt(rsnew) < 1e-10
               break
         end
         p = r + (rsnew / rsold) * p;
