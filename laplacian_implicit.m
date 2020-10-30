@@ -4,11 +4,12 @@ close all;
 
 dx = 1;
 dy =1;
-dt =1;
+dt =0.1;
 t0 = dt;
-T=5;
+T=2;
 A = dx*dy/dt;
 B= dy/dx;
+D = 1;
 
 M = zeros(9,9);
 
@@ -22,10 +23,6 @@ M(4,4) =  2*B+1/B;
 M(6,6) =M(4,4);
 
 M(5,5) = 2*B +2/B;
-
-for i = 1:9
-    M(i,i) = M(i,i)+ dt;
-end
 
 for i = 1:6
     M(i,i+3) = -B;
@@ -42,6 +39,19 @@ for i=1:9
     end
 end
 
+Mneg = M * (-D);
+
+M = M * D;
+
+
+for i = 1:9
+    M(i,i) = M(i,i)+ 1/dt;
+end
+
+for i = 1:9
+    Mneg(i,i) = Mneg(i,i)+ 1/dt;
+end
+
 S = [0 0 0 0 1 0 0 0 0]';
 
 b0 = S/dt;
@@ -53,11 +63,52 @@ for i= 1:T/dt
     b0 = S/dt;
 end
 
-TempF = [1 2 4 1 5 1 4 1 4]';
+
+% for i= 1:T/dt
+%     S = inv(M)*b0;
+%     S_save(:,i) = S;
+%     b0 = S/dt;
+% end
+
+ T0 = [0 0 0 0 5 0 0 0 0]';
+
+ TempF = [1 2 2 1 5 1 2 1 4]';
+
+ dT = TempF- T0;
+ 
+  plot(S)
+ 
+ hold on;
+
+ S = S.*TempF;
+   plot(S)
+ 
+
+  sum(S)
+  
+  NewSave = zeros(9,(T/dt));
 
 for i= 1:T/dt
-    S = dt * M * S_save(:,T+1-i) .* TempF;
+    S = dt * M * S;
+    NewSave(:,i) = S;
 end
+
+%  for i= 1:T/dt
+%     [S,r_out] = conjgrad(Mneg, b0, S);
+%     S_save(:,i) = S;
+%     b0 = S/dt;
+%  end
+
+
+
+sum(S)
+
+
+
+%  for i= 1:T/dt
+%      S = dt .* (M * S);
+%  end
+ 
 
 
 function [x0,r_out] = conjgrad(A, b, x0)
