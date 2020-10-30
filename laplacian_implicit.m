@@ -47,12 +47,17 @@ S = [0 0 0 0 1 0 0 0 0]';
 b0 = S/dt;
 S_save = zeros(9,(T/dt));
 
-for i= t0:dt:T
+for i= 1:T/dt
     [S,r_out] = conjgrad(M, b0, S);
     S_save(:,i) = S;
     b0 = S/dt;
 end
 
+TempF = [1 2 4 1 5 1 4 1 4]';
+
+for i= 1:T/dt
+    S = dt * M * S_save(:,T+1-i) .* TempF;
+end
 
 
 function [x0,r_out] = conjgrad(A, b, x0)

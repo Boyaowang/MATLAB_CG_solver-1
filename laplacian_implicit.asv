@@ -5,6 +5,8 @@ close all;
 dx = 1;
 dy =1;
 dt =1;
+t0 = dt;
+T=5;
 A = dx*dy/dt;
 B= dy/dx;
 
@@ -31,8 +33,52 @@ for i = 1:6
 end
 
 for i=1:9
-    if(i ==1 || i ==2 || i ==4 ||i ==5 ||i ==7 ||i ==2 || ) 
+    if(i ==1 || i ==2 || i ==4 ||i ==5 ||i ==7 ||i ==8)
+        M(i,i+1) = -1/B;
+    end
+    
+    if(i ==2 || i ==3 || i ==5 ||i ==6 ||i ==8 ||i ==9)
+        M(i,i-1) = -1/B;
     end
 end
+
+S = [0 0 0 0 1 0 0 0 0]';
+
+b0 = S/dt;
+S_save = zeros(9,(T/dt));
+
+for i= t0:dt:T
+    [S,r_out] = conjgrad(M, b0, S);
+    S_save(:,i) = S;
+    b0 = S/dt;
+end
+
+
+for i= t0:dt:T
+
+end
+
+
+function [x0,r_out] = conjgrad(A, b, x0)
+    r = b - A * x0;
+    p = r;
+    rsold = r' * r;
+    for i = 1:10000 %length(b)
+        Ap = A * p;
+        alpha = 1 * (rsold / (p' * Ap));
+        x0 = x0 + alpha * p;
+        r = r - alpha * Ap;
+        rsnew = r' * r;
+        x0_out(i,:) = x0;
+        r_out(i) = rsnew;
+        if sqrt(rsnew) < 1e-5
+              break
+        end
+        p = r + (rsnew / rsold) * p;
+        rsold = rsnew;
+    end
+
+end
+
 
         
