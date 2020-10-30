@@ -1,0 +1,38 @@
+clear;
+clc;
+close all;
+
+dx = 1;
+dy =1;
+dt =1;
+A = dx*dy/dt;
+B= dy/dx;
+
+M = zeros(9,9);
+
+M(1,1)= B+1/B;
+M(3,3) = M(1,1);
+M(7,7) =M(1,1);
+M(9,9) = M(1,1);
+M(2,2) = B+2/B;
+M(8,8) = M(2,2);
+M(4,4) =  2*B+1/B;
+M(6,6) =M(4,4);
+
+M(5,5) = 2*B +2/B;
+
+for i = 1:9
+    M(i,i) = M(i,i)+ dt;
+end
+
+for i = 1:6
+    M(i,i+3) = -B;
+    M(i+3, i)=-B;
+end
+
+for i=1:9
+    if(i ==1 || i ==2 || i ==4 ||i ==5 ||i ==7 ||i ==2 || ) 
+    end
+end
+
+        
