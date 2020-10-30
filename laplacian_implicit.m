@@ -5,6 +5,8 @@ close all;
 dx = 1;
 dy =1;
 dt =1;
+t0 = dt;
+T=5;
 A = dx*dy/dt;
 B= dy/dx;
 
@@ -43,8 +45,17 @@ end
 S = [0 0 0 0 1 0 0 0 0]';
 
 b0 = S/dt;
+S_save = zeros(9,(T/dt));
 
-function [x0, x0_out,i,r_out] = conjgrad(A, b, x0)
+for i= t0:dt:T
+    [S,r_out] = conjgrad(M, b0, S);
+    S_save(:,i) = S;
+    b0 = S/dt;
+end
+
+
+
+function [x0,r_out] = conjgrad(A, b, x0)
     r = b - A * x0;
     p = r;
     rsold = r' * r;
@@ -56,7 +67,7 @@ function [x0, x0_out,i,r_out] = conjgrad(A, b, x0)
         rsnew = r' * r;
         x0_out(i,:) = x0;
         r_out(i) = rsnew;
-        if sqrt(rsnew) < 1e-20
+        if sqrt(rsnew) < 1e-5
               break
         end
         p = r + (rsnew / rsold) * p;

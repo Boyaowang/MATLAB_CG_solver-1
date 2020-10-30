@@ -1,7 +1,7 @@
 clc;
 clear;
 close all;
-size =100;
+size =3;
 
 %a = pascal(size);
 
