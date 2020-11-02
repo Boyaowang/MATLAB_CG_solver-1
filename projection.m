@@ -23,52 +23,66 @@ M(1,1) = alpha+beta; M(1,2) = -beta;
 M(N,N) = alpha+beta; M(N,N-1) = -beta;
 
 
-S = [0 0 0 0 1 0 0 0 0]';
+S = [1 0 0 0 1 0 0 0 1]';
 b0 = alpha.*S;
 S_save = zeros(N,(T/dt));
 
 for i=1:T/dt
     [S,r_out] = conjgrad(M, b0, S);
-        S_save(:,i) = S;
+    S_save(:,i) = S;
     b0 = S*alpha;
 end
 
 
-TempF = [4 1 3 7 4 7 3 1 4]';
+TempF = [4 1 3 7 10 7 3 1 50]';
 
-ST = S.*TempF
+ST = S.*TempF;
 
+ST_mod = norm(ST);
+
+ST = S * ST_mod/norm(S);
 
 sum(ST)
 
- for i= 1:(T/dt)+10
+ for i= 1:(T/dt)
      ST =(M * ST)./alpha;
      
-     for ii = 1:50
-     for i = 1:N
-        if(ST(i) <0)
-              if(i==1)
-                  ST(i+1) = ST(i+1)+ST(i)/2;
-                  ST(i+2) = ST(i+2)+ST(i)/2;
-                  ST(i) = 0;
-              elseif(i==N)
-                  ST(i-1) = ST(i-1)+ST(i)/2;
-                  ST(i-2) = ST(i-2)+ST(i)/2;
-                  ST(i) = 0;
-              else
-              ST(i-1) = ST(i-1)+ST(i)/2;
-              ST(i+1) = ST(i+1)+ST(i)/2;
-              ST(i) = 0;
-              end
-        end
-     end
-     end
-     plot(ST)
-     hold on
+%      for ii = 1:50
+%      for i = 1:N
+%         if(ST(i) <0)
+%               if(i==1)
+%                   ST(i+1) = ST(i+1)+ST(i)/2;
+%                   ST(i+2) = ST(i+2)+ST(i)/2;
+%                   ST(i) = 0;
+%               elseif(i==N)
+%                   ST(i-1) = ST(i-1)+ST(i)/2;
+%                   ST(i-2) = ST(i-2)+ST(i)/2;
+%                   ST(i) = 0;
+%               else
+%               ST(i-1) = ST(i-1)+ST(i)/2;
+%               ST(i+1) = ST(i+1)+ST(i)/2;
+%               ST(i) = 0;
+%               end
+%         end
+%      end
+%      end
+%      plot(ST)
+%      hold on
  end
  
- figure(2)
- plot(ST)
+ 
+ bt = alpha .*  TempF;
+ 
+ for i=1:T/dt
+    [TempF,r_out] = conjgrad(M, bt, TempF);
+    bt = TempF*alpha;
+end
+ 
+ 
+ ST
+%  
+%  figure(2)
+  plot(ST)
  
 %  bst = alpha.*ST;
  
