@@ -26,7 +26,7 @@ M(N,N) = alpha+beta; M(N,N-1) = -beta;
 
 %% Finish descritization  and do the calculation %%
 
-S = [0 0 0 0 1 0 0 0 0]';
+S = [1 0 0 0 1 0 0 0 0]';
 b0 = alpha.*S;
 S_save = zeros(N,(T/dt));
 S0 = S;
