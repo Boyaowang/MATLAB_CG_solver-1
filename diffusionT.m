@@ -40,6 +40,7 @@ end
 
 
 TempF = [1 0 6 2 6 2 6 0 6]';
+TempF0 = TempF;
 STp = S' * TempF
  
 
